@@ -1,10 +1,9 @@
 
 public class Deck {
 
-	private void createDeck (){
+	public static Card[] createCards() {
 		
 		//instantiate 52 card objects to create a full deck
-		
 		
 		//clubs
 		
@@ -329,5 +328,46 @@ public class Deck {
 		aceOfSpades.pointValue = 14;
 		aceOfSpades.suitValue = 3;		
 		
+		
+		// create an array (deck) out of the above cards and return
+		
+		Card[] orderedDeck = { twoOfClubs, threeOfClubs, fourOfClubs, fiveOfClubs, sixOfClubs, 
+				sevenOfClubs, eightOfClubs, nineOfClubs, tenOfClubs, jackOfClubs, 
+				queenOfClubs, kingOfClubs, aceOfClubs, twoOfDiamonds, threeOfDiamonds, 
+				fourOfDiamonds, fiveOfDiamonds, sixOfDiamonds, sevenOfDiamonds, eightOfDiamonds, 
+				nineOfDiamonds, tenOfDiamonds, jackOfDiamonds, queenOfDiamonds, kingOfDiamonds, 
+				aceOfDiamonds, twoOfHearts, threeOfHearts, fourOfHearts, fiveOfHearts, sixOfHearts, 
+				sevenOfHearts, eightOfHearts, nineOfHearts, tenOfHearts, jackOfHearts, queenOfHearts, 
+				kingOfHearts, aceOfHearts, twoOfSpades, threeOfSpades, fourOfSpades, fiveOfSpades, 
+				sixOfSpades, sevenOfSpades, eightOfSpades, nineOfSpades, tenOfSpades, jackOfSpades, 
+				queenOfSpades, kingOfSpades, aceOfSpades };
+		
+		return orderedDeck;
 	}
+	
+//	public static void createDeck() {
+//		
+//		// create a deck using the above card objects in random order
+//	
+//		Card[] theDeck = Deck.createCards();
+//		
+//		System.out.println( theDeck[1].cardName );
+//		
+//		// make selection a random number from 0 to 51
+//		int selection;
+//		final int upperBound = 51;
+//		final int lowerBound = 0;
+//		
+//		Random generator = new Random();
+//		
+//		selection = generator.nextInt();
+//		selection = Math.abs(selection);
+//		selection %= ( upperBound - lowerBound );
+//		selection += lowerBound;
+//		
+//		
+//		
+//		
+//		
+//	}
 }

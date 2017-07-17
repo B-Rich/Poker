@@ -2,8 +2,10 @@
 public class Game {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Player user = new Player();
+		Player computer = new Player();
+		
+		Player.createDeck();
 	}
 
 }
