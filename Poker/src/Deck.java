@@ -344,30 +344,4 @@ public class Deck {
 		
 		return orderedDeck;
 	}
-	
-//	public static void createDeck() {
-//		
-//		// create a deck using the above card objects in random order
-//	
-//		Card[] theDeck = Deck.createCards();
-//		
-//		System.out.println( theDeck[1].cardName );
-//		
-//		// make selection a random number from 0 to 51
-//		int selection;
-//		final int upperBound = 51;
-//		final int lowerBound = 0;
-//		
-//		Random generator = new Random();
-//		
-//		selection = generator.nextInt();
-//		selection = Math.abs(selection);
-//		selection %= ( upperBound - lowerBound );
-//		selection += lowerBound;
-//		
-//		
-//		
-//		
-//		
-//	}
 }

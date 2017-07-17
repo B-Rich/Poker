@@ -1,18 +1,14 @@
-
-
 import java.util.Random;
 
 public class Player {
 
-	private int balance = 0;
-	public static Card[] hand = new Card[5];
+	public int balance = 0;
+	public Card[] hand = new Card[5];
 	
-	public static Card[] drawHand( Card[] theDeck) {
-		
-		// create a deck
-		
+	public Card[] drawHand( Card[] theDeck ) {
 		
 		// make 'selection' variable a random number from 0 to 51
+		
 		int selection;
 		final int upperBound = 51;
 		final int lowerBound = 0;
@@ -31,18 +27,14 @@ public class Player {
 	 				hand[2] == theDeck[selection] ||  hand[3] == theDeck[selection] ||
 	 				hand[4] == theDeck[selection] ) {
 				
-//				System.out.println("already selected...");
 				selection = generator.nextInt();
 				selection = Math.abs(selection);
 				selection %= ( upperBound - lowerBound );
 				selection += lowerBound;
-				
+			
 			}
 			
 			hand[i] = theDeck[selection];
-			
-//  			System.out.println( selection );
-  				
 		}
 		
 		return hand;
