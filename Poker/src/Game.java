@@ -1,8 +1,39 @@
 import javax.swing.JOptionPane;
+import java.util.Random;
 
 public class Game {
 
 	public static void main(String[] args) {
+		
+		
+		Player[] bothPlayers = Game.createPlayers();
+		
+		int userPoints = Game.countPoints( bothPlayers[0].hand );
+		System.out.println( userPoints );
+		
+		int computerPoints = Game.countPoints( bothPlayers[1].hand );
+		System.out.println( computerPoints );
+		
+		
+		boolean userHasHigherHand = Game.determinePlayerWithHigherHand( userPoints, computerPoints );
+		
+		if ( userHasHigherHand ){
+			System.out.println("user is posed to win");
+		} else {
+			System.out.println("computer is posed to win");
+		}
+		
+		
+		
+		
+		
+		
+		boolean computerWillBet = Game.decisionToBet(20, 90, computerPoints);
+		
+	}
+	
+	
+	private static Player[] createPlayers (){
 		
 		Player user = new Player();
 		Player computer = new Player();
@@ -23,37 +54,29 @@ public class Game {
 			}
 		}
 		
+		
+		Player[] bothPlayers = { user, computer };
+		
+		
 		JOptionPane.showMessageDialog(null, "Your hand: \n" + user.hand[0].cardName + '\n' +  user.hand[1].cardName + '\n' +
-				user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
-				user.hand[4].cardName + '\n');
+											user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
+											user.hand[4].cardName + '\n');
 		
 		System.out.println( "Your hand: \n" + user.hand[0].cardName + '\n' +  user.hand[1].cardName + '\n' +
-				user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
-				user.hand[4].cardName + '\n');
+							user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
+							user.hand[4].cardName + '\n');
 		
 		System.out.println("Computer's hand: \n" + computer.hand[0].cardName + '\n' + computer.hand[1].cardName + '\n' +
-				computer.hand[2].cardName + '\n' + computer.hand[3].cardName + '\n' + 
-				computer.hand[4].cardName + '\n');
+							computer.hand[2].cardName + '\n' + computer.hand[3].cardName + '\n' + 
+							computer.hand[4].cardName + '\n');
 		
+	
 		
-		
-		
-		int userPoints = Game.countPoints(user.hand);
-		System.out.println( userPoints );
-		
-		int computerPoints = Game.countPoints(computer.hand);
-		System.out.println( computerPoints );
-		
-		boolean winner = Game.determineWinner(userPoints, computerPoints);
-		
-		if (winner){
-			System.out.println( "user wins");
-		} else {
-			System.out.println( "computer wins");
-		}
+		return bothPlayers;
 		
 	}
 	
+// evaluate        the various possible hands to determine the points of each hand
 	
 	private static int countPoints( Card[] playerHand ){
 		
@@ -286,7 +309,7 @@ public class Game {
 	
 	
 	
-	private static boolean determineWinner( int userPoints, int computerPoints ){
+	private static boolean determinePlayerWithHigherHand( int userPoints, int computerPoints ){
 			
 		if ( userPoints > computerPoints ){
 			return true;
@@ -295,6 +318,48 @@ public class Game {
 		}
 		
 	}
+	
+	
+	
+	private static boolean decisionToBet( int totalMoneyInPot, int computerBalance, int valueOfHand ){
+	
+		
+		boolean computerWillBet = false;
+		
+		int riskFactor = 1000 * totalMoneyInPot / computerBalance - 5  * valueOfHand;
+		System.out.println( riskFactor );
+		
+		if ( riskFactor < 750 ){
+			
+			computerWillBet = true;		
+			
+			
+			
+			// random bluff factor. If bluff < 5, computerWillBet becomes true.
+			int bluff;
+			final int upperBound = 100;
+			final int lowerBound = 1;
+			Random generator = new Random();
+
+			bluff = generator.nextInt();
+			bluff = Math.abs(bluff);
+			bluff %= ( upperBound - lowerBound );
+			bluff += lowerBound;
+			
+			if( bluff < 5 ){
+				computerWillBet = false;
+			}
+			
+			
+			
+		} else {		
+			computerWillBet = false;	
+		}
+		
+		return computerWillBet;
+		
+	}
+	
 	
 	
 }
