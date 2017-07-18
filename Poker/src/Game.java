@@ -23,20 +23,35 @@ public class Game {
 			}
 		}
 		
-//		JOptionPane.showMessageDialog(null, "Your hand: \n" + user.hand[0].cardName + '\n' +  user.hand[1].cardName + '\n' +
-//				user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
-//				user.hand[4].cardName + '\n');
+		JOptionPane.showMessageDialog(null, "Your hand: \n" + user.hand[0].cardName + '\n' +  user.hand[1].cardName + '\n' +
+				user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
+				user.hand[4].cardName + '\n');
 		
 		System.out.println( "Your hand: \n" + user.hand[0].cardName + '\n' +  user.hand[1].cardName + '\n' +
 				user.hand[2].cardName + '\n' + user.hand[3].cardName + '\n' + 
 				user.hand[4].cardName + '\n');
 		
-//		System.out.println("Computer's hand: \n" + computer.hand[0].cardName + '\n' + computer.hand[1].cardName + '\n' +
-//				computer.hand[2].cardName + '\n' + computer.hand[3].cardName + '\n' + 
-//				computer.hand[4].cardName + '\n');
+		System.out.println("Computer's hand: \n" + computer.hand[0].cardName + '\n' + computer.hand[1].cardName + '\n' +
+				computer.hand[2].cardName + '\n' + computer.hand[3].cardName + '\n' + 
+				computer.hand[4].cardName + '\n');
+		
+		
+		
 		
 		int userPoints = Game.countPoints(user.hand);
 		System.out.println( userPoints );
+		
+		int computerPoints = Game.countPoints(computer.hand);
+		System.out.println( computerPoints );
+		
+		boolean winner = Game.determineWinner(userPoints, computerPoints);
+		
+		if (winner){
+			System.out.println( "user wins");
+		} else {
+			System.out.println( "computer wins");
+		}
+		
 	}
 	
 	
@@ -44,12 +59,17 @@ public class Game {
 		
 		int totalPoints = 0;
 		
+
+		/*
+		 *  evaluate highest card in the hand
+		 */
+		
 		int highestCardValue = 0;
 		
-		//for use in full house evaluations
+		// for use in four of a kind
 		int secondHighestCardValue = 0;
-
-		// evaluate highest and second highest card in the hand
+		
+		
 		for( int i = 0; i < 5; i++){
 			
 			if ( playerHand[i].pointValue > highestCardValue) {
@@ -58,20 +78,32 @@ public class Game {
 				highestCardValue = playerHand[i].pointValue;
 				totalPoints = highestCardValue;
 				
-			} else if ( playerHand[i].pointValue > secondHighestCardValue ) {
+			} else if ( playerHand[i].pointValue > secondHighestCardValue ){
 				
 				secondHighestCardValue = playerHand[i].pointValue;
 				
+//				System.out.println( "second highest: " + secondHighestCardValue );
 			}
+		
 		}
+
 		
 		
-		
-		// check for one pair
+		/*
+		 *  check for one pair
+		 */
 		
 		int highestPair = 0;
 		int lowestPair = 0;
-//		boolean hasOnePair = false;
+		boolean hasOnePair = false;
+		
+		//for use in full house evaluation
+		
+		int pairValue = 0;
+		
+		// if this equals 4, (i.e. two increments for each pair), there are two pairs. If one pair it'll only increase to 2.0
+		
+		int hasTwoPair = 0;
 		
 		for( int i = 0; i < 5; i++){
 			for( int j = 0; j < 5; j++){
@@ -80,27 +112,40 @@ public class Game {
 					totalPoints = 14 + highestCardValue;
 					
 					highestPair = highestCardValue;
-//					hasOnePair = true;
+					hasOnePair = true;
+					pairValue = playerHand[i].pointValue;
 					
-					if ( playerHand[i].pointValue == playerHand[j].pointValue && i != j &&
-						 highestPair != playerHand[i].pointValue && highestPair != playerHand[j].pointValue ) {
+					hasTwoPair++;
+					
+//					System.out.println("You have one pair. It's at: " + i + ", " + j);
+					
+					
+					//check for second pair
+					
+					if ( hasTwoPair == 4 ) {
 						
-//						lowestPair = playerHand[i].pointValue;
+						lowestPair = playerHand[j].pointValue;
 						
-//						totalPoints = 28 + 20 * highestPair + lowestPair;
-						System.out.println("You have two pair. The second is at: " + i + " " + j );
+						totalPoints = 28 + 20 * highestPair + lowestPair;
+
+//						System.out.println("You have two pair. The second is at: " + i + " " + j );
 					}
-					
-					System.out.println("You have one pair. It's at: " + i + ", " + j);	
+			
 				}
 			}
 		}
-				
-        // check for two pair
+			
 		
 		
+		/*
+		 *  check for three of a kind
+		 */
 		
-		// check for three of a kind
+		
+		//for use in full house evaluation
+		
+		boolean hasThreeOfAKind = false;
+		int threeOfAKindValue = 0;
 		
 		for( int n = 0; n < 5; n++){
 			for( int j = 0; j < 5; j++){
@@ -110,8 +155,10 @@ public class Game {
 						 n != j && n != k && j != k ) {
 						
 						totalPoints = 321 + highestCardValue;
-	
-						System.out.println("You have three of a kind. They're at: " + n + ", " + j + ", " + k);	
+						hasThreeOfAKind = true;
+						threeOfAKindValue = playerHand[n].pointValue;
+						
+//						System.out.println("You have three of a kind. They're at: " + n + ", " + j + ", " + k);	
 					}
 				}
 			}
@@ -119,7 +166,9 @@ public class Game {
 		
 		
 		
-		// check for straight
+		/*
+		 *  check for straight
+		 */
 		
 		boolean isStraight = false;
 		int temporary;
@@ -129,28 +178,35 @@ public class Game {
 		for (int i = 0; i < 5; i++) {
             for (int j = i + 1; j < 5; j++) {
                 if (playerHand[i].cardID > playerHand[j].cardID) {
-                    temporary = playerHand[i].cardID;
+                    
+                	temporary = playerHand[i].cardID;
                     playerHand[i].cardID = playerHand[j].cardID;
                     playerHand[j].cardID = temporary;
+                    
                 }
             }
         }
 		
 		// check if hand is straight
 		
-		if ( playerHand[0].cardID == playerHand[1].cardID - 1 && 
-			 playerHand[0].cardID == playerHand[2].cardID - 2 &&
-			 playerHand[0].cardID == playerHand[3].cardID - 3 && 
-			 playerHand[0].cardID == playerHand[4].cardID - 4 ){
+		if ( playerHand[0].pointValue == playerHand[1].pointValue - 1 && 
+			 playerHand[0].pointValue == playerHand[2].pointValue - 2 &&
+			 playerHand[0].pointValue == playerHand[3].pointValue - 3 && 
+			 playerHand[0].pointValue == playerHand[4].pointValue - 4 ){
 			
 			isStraight = true;
 			totalPoints = 335 + highestCardValue;
+			
+//			System.out.println("You have a straight.");
 			
 		}
 
 		
 		
-		// check for flush
+		
+		/*
+		 *  check for flush
+		 */
 		
 		boolean isFlush = false;
 		
@@ -161,15 +217,28 @@ public class Game {
 			
 			isFlush = true;
 			totalPoints = 349 + highestCardValue;
+			
+//			System.out.println("You have a flush.");
 		}
 		
 		
 		
 		
-		// check for full house
+		/*
+		 *  check for full house
+		 */
+		
+		if ( hasThreeOfAKind && hasOnePair ) {
+			totalPoints = 363 + 20 * threeOfAKindValue + pairValue;
+			
+//			System.out.println("You have a full house.");
+		}
 		
 		
-		// check for four of a kind
+		
+		/*
+		 *  check for four of a kind
+		 */
 		
 		for( int n = 0; n < 5; n++){
 			for( int j = 0; j < 5; j++){
@@ -177,40 +246,55 @@ public class Game {
 					for( int m = 0; m < 5; m++){
 						if ( playerHand[n].pointValue == playerHand[j].pointValue && 
 							 playerHand[n].pointValue == playerHand[k].pointValue && 
-							playerHand[n].pointValue == playerHand[m].pointValue &&
+							 playerHand[n].pointValue == playerHand[m].pointValue &&
 							 n != j && n != k && j != k && n != m && j!= m && k != m ) {
 							
-							//not sure how to formalize this
-					//		totalPoints = 656 + 20 * playerHand[n].pointValue + REMAININGCARD ;
+							int fourOfAKindValue = 0;
+							int remainingCardValue = 0;
+							
+							fourOfAKindValue = playerHand[n].pointValue;
+							
+							
+							if ( fourOfAKindValue > secondHighestCardValue ){
+								remainingCardValue = secondHighestCardValue;
+							} else {
+								remainingCardValue = highestCardValue;
+							}
+							
+							
+							totalPoints = 656 + 20 * fourOfAKindValue + remainingCardValue;
 		
-							System.out.println("You have four of a kind. They're at: " + n + ", " + j + ", " + k + ", " + m);	
+//							System.out.println("You have four of a kind. Remaining card is : " +  remainingCardValue );	
 						}
 					}
 				}
 			}
-		}
+		}	
 		
 		
-		
-		// check for straight flush
+		/*
+		 *  check for straight flush
+		 */
 		
 		if ( isStraight && isFlush ){
 			totalPoints = 949 + highestCardValue;
+//			System.out.println("You have a straight flush.");
 		}
-		
-		
-		
-		
+
 		return totalPoints;
 	}
 	
 	
 	
-//	private boolean determineWinner( Card[] hand1, Card[] hand2 ){
-//		
-//		
-//		if ( hand1 > hand2 )
-//		
-//		return false;
-//	}
+	private static boolean determineWinner( int userPoints, int computerPoints ){
+			
+		if ( userPoints > computerPoints ){
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	
 }
