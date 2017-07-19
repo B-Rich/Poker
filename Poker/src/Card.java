@@ -1,5 +1,6 @@
 
-public class Card {
+public class Card 
+{
 	
 	/* cardID -- value from 1 to 52
 	 * cardName -- verbal representation of card, to be shown to user

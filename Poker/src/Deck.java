@@ -1,7 +1,9 @@
 
-public class Deck {
+public class Deck 
+{
 
-	public static Card[] createCards() {
+	public static Card[] createCards() 
+	{
 		
 		//instantiate 52 card objects to create a full deck
 		
