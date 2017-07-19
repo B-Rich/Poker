@@ -389,7 +389,6 @@ public class Game
 		
 		int totalPoints = 0;
 		
-
 		/*
 		 *  evaluate highest card in the hand
 		 */
@@ -401,23 +400,16 @@ public class Game
 		
 		
 		for( int i = 0; i < 5; i++){
-			
 			if ( playerHand[i].pointValue > highestCardValue) 
-			{
-				
+			{	
 				secondHighestCardValue = highestCardValue;
 				highestCardValue = playerHand[i].pointValue;
 				totalPoints = highestCardValue;
-				
 			} 
 			else if ( playerHand[i].pointValue > secondHighestCardValue )
-			{
-				
+			{	
 				secondHighestCardValue = playerHand[i].pointValue;
-				
-//				System.out.println( "second highest: " + secondHighestCardValue );
 			}
-		
 		}
 
 		
@@ -426,16 +418,17 @@ public class Game
 		 *  check for one pair
 		 */
 		
-		int highestPair = 0;
-		int lowestPair = 0;
+
+		//for two pair point evaluation
+		int otherPairValue = 0;
+		
+		//used in full house evaluation
 		boolean hasOnePair = false;
 		
 		//for use in full house evaluation
-		
 		int pairValue = 0;
 		
 		// if this equals 4, (i.e. two increments for each pair), there are two pairs. If one pair it'll only increase to 2.0
-		
 		int hasTwoPair = 0;
 		
 		for( int i = 0; i < 5; i++)
@@ -447,25 +440,27 @@ public class Game
 					
 					totalPoints = 14 + highestCardValue;
 					
-					highestPair = highestCardValue;
 					hasOnePair = true;
 					pairValue = playerHand[i].pointValue;
 					
 					hasTwoPair++;
 					
-//					System.out.println("You have one pair. It's at: " + i + ", " + j);
-					
-					
 					//check for second pair
-					
 					if ( hasTwoPair == 4 ) 
-					{
+					{	
 						
-						lowestPair = playerHand[j].pointValue;
+						otherPairValue = playerHand[j].pointValue;	
 						
-						totalPoints = 28 + 20 * highestPair + lowestPair;
-
-//						System.out.println("You have two pair. The second is at: " + i + " " + j );
+						//determine which pair is higher
+						if (pairValue > otherPairValue)
+						{
+							totalPoints = 28 + 20 * pairValue + otherPairValue;
+						} 
+						else 
+						{
+							totalPoints = 28 + 20 * otherPairValue + pairValue;
+						}
+									
 					}
 			
 				}
@@ -480,7 +475,6 @@ public class Game
 		
 		
 		//for use in full house evaluation
-		
 		boolean hasThreeOfAKind = false;
 		int threeOfAKindValue = 0;
 		
@@ -499,7 +493,6 @@ public class Game
 						hasThreeOfAKind = true;
 						threeOfAKindValue = playerHand[n].pointValue;
 						
-//						System.out.println("You have three of a kind. They're at: " + n + ", " + j + ", " + k);	
 					}
 				}
 			}
@@ -515,7 +508,6 @@ public class Game
 		int temporary;
 		
 		// sort hand in ascending order
-		
 		for (int i = 0; i < 5; i++) 
 		{
             for (int j = i + 1; j < 5; j++) 
@@ -532,7 +524,6 @@ public class Game
         }
 		
 		// check if hand is straight
-		
 		if ( playerHand[0].pointValue == playerHand[1].pointValue - 1 && 
 			 playerHand[0].pointValue == playerHand[2].pointValue - 2 &&
 			 playerHand[0].pointValue == playerHand[3].pointValue - 3 && 
@@ -698,7 +689,7 @@ public class Game
 		int riskFactor = 1000 * totalMoneyInPot / computerBalance - 5  * valueOfHand;
 		
 		// only difference between this and decisionToBet is that the threshold is lower for riskFactor, i.e. the better hand
-		// the computer has, the more likely it is to raise.
+		// the computer has, the more likely it is to raise; and that a different boolean is returned
 		
 		if ( riskFactor < 100 )
 		{
