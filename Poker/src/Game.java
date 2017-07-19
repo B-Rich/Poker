@@ -56,7 +56,8 @@ public class Game
 				{
 					
 					//tell the user their bet is invalid
-					amountUserWantsToBet = Integer.parseInt( JOptionPane.showInputDialog("INVALID BET. \n Bet must be greater than 0 and less than your balance." + "\n\nRound " + round + 
+					amountUserWantsToBet = Integer.parseInt( JOptionPane.showInputDialog("INVALID BET. \n "
+							+ "Bet must be greater than 0 and less than your balance." + "\n\nRound " + round + 
 							  "\n\nYour balance: " + bothPlayers[0].balance +
 							  "\nPot: " + amountInPot + 
 							  "\nPlace a bet: " ) );
@@ -91,6 +92,11 @@ public class Game
 					if( amountComputerBet > bothPlayers[0].balance )
 					{
 						amountComputerRaise = bothPlayers[0].balance;
+					}
+					
+					if( amountComputerBet > bothPlayers[1].balance )
+					{
+						amountComputerRaise = bothPlayers[1].balance - amountUserBet;
 					}
 					
 					//subtract bet from computer's balance
@@ -134,7 +140,7 @@ public class Game
 					
 				}
 				
-				else if ( computerWillBet )
+				else if ( computerWillBet && !computerWillRaise)
 				{
 					
 					amountComputerBet = amountUserBet;
@@ -152,22 +158,27 @@ public class Game
 				}
 				
 				
-				if ( userHasHigherHand && !playerFolded  )
+				if ( userHasHigherHand || playerFolded  )
 				{
 					
 					//award pot to user
 					bothPlayers[0].balance += amountInPot;
 				
 					//show hand and tell user they won
-					JOptionPane.showMessageDialog(null, "You win the hand." + "\n\nYour hand: \n" + bothPlayers[0].hand[0].cardName + '\n' +  bothPlayers[0].hand[1].cardName + '\n' +
-							bothPlayers[0].hand[2].cardName + '\n' + bothPlayers[0].hand[3].cardName + '\n' + 
+					JOptionPane.showMessageDialog(null, "You win the hand." + ""
+							+ "\n\nYour hand: \n" + 
+							bothPlayers[0].hand[0].cardName + '\n' +  
+							bothPlayers[0].hand[1].cardName + '\n' +
+							bothPlayers[0].hand[2].cardName + '\n' + 
+							bothPlayers[0].hand[3].cardName + '\n' + 
 							bothPlayers[0].hand[4].cardName + 
 							"\n\n\n" +
-							"Computer's hand: \n" + bothPlayers[1].hand[0].cardName + '\n' + bothPlayers[1].hand[1].cardName + '\n' +
-							bothPlayers[1].hand[2].cardName + '\n' + bothPlayers[1].hand[3].cardName + '\n' + 
-							bothPlayers[1].hand[4].cardName + '\n');
-					
-					
+							"Computer's hand: \n" + 
+							bothPlayers[1].hand[0].cardName + '\n' + 
+							bothPlayers[1].hand[1].cardName + '\n' +
+							bothPlayers[1].hand[2].cardName + '\n' + 
+							bothPlayers[1].hand[3].cardName + '\n' + 
+							bothPlayers[1].hand[4].cardName + '\n');		
 				} 
 				else 
 				{
@@ -175,22 +186,26 @@ public class Game
 					bothPlayers[1].balance += amountInPot;
 					
 					//show hand and tell user the computer won
-					JOptionPane.showMessageDialog(null, "Computer wins the hand." + "\n\nYour hand: \n" + bothPlayers[0].hand[0].cardName + '\n' +  bothPlayers[0].hand[1].cardName + '\n' +
-							bothPlayers[0].hand[2].cardName + '\n' + bothPlayers[0].hand[3].cardName + '\n' + 
+					JOptionPane.showMessageDialog(null, "Computer wins the hand." + 
+							"\n\nYour hand: \n" + 
+							bothPlayers[0].hand[0].cardName + '\n' +  
+							bothPlayers[0].hand[1].cardName + '\n' +
+							bothPlayers[0].hand[2].cardName + '\n' + 
+							bothPlayers[0].hand[3].cardName + '\n' + 
 							bothPlayers[0].hand[4].cardName + 
 							"\n\n\n" +
-							"Computer's hand: \n" + bothPlayers[1].hand[0].cardName + '\n' + bothPlayers[1].hand[1].cardName + '\n' +
-							bothPlayers[1].hand[2].cardName + '\n' + bothPlayers[1].hand[3].cardName + '\n' + 
+							"Computer's hand: \n" + 
+							bothPlayers[1].hand[0].cardName + '\n' + 
+							bothPlayers[1].hand[1].cardName + '\n' +
+							bothPlayers[1].hand[2].cardName + '\n' + 
+							bothPlayers[1].hand[3].cardName + '\n' + 
 							bothPlayers[1].hand[4].cardName + "\n\n\n" +
 							"Your balance is now " + bothPlayers[0].balance);
-					
 				}
 				
 				//increment round
 				round++;
-				
-				
-				
+								
 			} 
 			// if the round is odd numbered, the computer bids first.		
 			else 
@@ -210,14 +225,18 @@ public class Game
 				//determine how much computer will bet
 				amountComputerBet = Game.countPoints( bothPlayers[1].hand ) / 10;
 				
+				//subtract bet from computer's balance
+				bothPlayers[1].balance -= amountComputerBet;
+				
 				//add computer's bet to the pot
 				amountInPot += amountComputerBet;
 				
 				//prompt the user to call, fold, or raise
-				String userPlayDecision = JOptionPane.showInputDialog( "The computer's inital bet is " + amountComputerBet + 
-						                                               ". Would you like to call, raise or fold?\n"
-						                                               + "If call, enter " + amountComputerBet + ".\n If raise, enter a number greater than that.\n"
-						                                               + " If fold, enter 0.\n");
+				String userPlayDecision = JOptionPane.showInputDialog( "The computer's inital bet is " + 
+										  	   amountComputerBet + ". Would you like to call, raise or fold?\n" + 
+                                               "If call, enter " + amountComputerBet + 
+                                               ".\n If raise, enter a number greater than that.\n" + 
+                                               " If fold, enter 0.\n");
 
 				//throw exception if user enters something other than a number
 				try 
@@ -232,9 +251,10 @@ public class Game
 				amountUserBet = Integer.parseInt(userPlayDecision);
 				
 				//keep prompting if user attempts to enter a bet lower than the computer's bet
-				while ( amountUserBet < amountComputerBet )
+				while ( amountUserBet < amountComputerBet && amountUserBet > bothPlayers[0].balance )
 				{
-					userPlayDecision = JOptionPane.showInputDialog( "INVALID VALUE. Your bet has to be equal to or greater than the computer's.\n\n "
+					userPlayDecision = JOptionPane.showInputDialog( "INVALID VALUE. Your bet has to be equal to or greater"
+							+ " than the computer's, and not more than your balance.\n\n "
 							+ "The computer's inital bet is " + amountComputerBet + 
                             ". Would you like to call, raise or fold?\n"
                             + "If call, enter " + amountComputerBet + ".\n If raise, enter a number greater than that.\n"
@@ -333,10 +353,7 @@ public class Game
 				round++;
 			}	
 			
-		}
-		
-		
-		
+		}		
 		
 		//determine who wins after end game status.
 		if ( bothPlayers[0].balance <= 0 )
